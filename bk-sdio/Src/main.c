@@ -281,9 +281,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure /*##-0- Turn all LEDs off(red, green, orange and blue) */
-HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin|BK_LED_ORG_Pin|BK_LED_RED_Pin|
-BK_LED_BLU_Pin, GPIO_PIN_RESET);GPIO pin : BK_LED_BLU_Pin */
+  /*Configure GPIO pin : BK_LED_BLU_Pin */
   GPIO_InitStruct.Pin = BK_LED_BLU_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
