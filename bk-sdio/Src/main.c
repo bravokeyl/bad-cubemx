@@ -59,7 +59,19 @@ SD_HandleTypeDef hsd;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+FATFS SDFatFs; /* File system object for SD card logical drive */
+FIL MyFile;
+/* File object */
+const char wtext[] = "Hola Pithre!";
+const uint8_t image1_bmp[] = {
+0x42,0x4d,0x36,0x84,0x03,0x00,0x00,0x00,0x00,0x00,0x36,0x00,0x00,0x00,
+0x28,0x00,0x00,0x00,0x40,0x01,0x00,0x00,0xf0,0x00,0x00,0x00,0x01,0x00,
+0x18,0x00,0x00,0x00,0x00,0x00,0x00,0x84,0x03,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x29,0x74,
+0x51,0x0e,0x63,0x30,0x04,0x4c,0x1d,0x0f,0x56,0x25,0x11,0x79,0x41,0x1f,
+0x85,0x6f,0x25,0x79,0x7e,0x27,0x72,0x72,0x0b,0x50,0x43,0x00,0x44,0x15,
+0x00,0x4b,0x0f,0x00,0x4a,0x15,0x07,0x50,0x16,0x03,0x54,0x22,0x23,0x70,
+0x65,0x30,0x82,0x6d,0x0f,0x6c,0x3e,0x22,0x80,0x5d,0x23,0x8b,0x5b,0x26};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,7 +92,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  FRESULT res; /* FatFs function common result code */
+  uint32_t byteswritten, bytesread; /* File write/read counts */
+  char rtext[256];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -105,7 +119,57 @@ int main(void)
   MX_FATFS_Init();
 
   /* USER CODE BEGIN 2 */
-
+  /*##-0- Turn all LEDs off(red, green, orange and blue) */
+  HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin|BK_LED_ORG_Pin|BK_LED_RED_Pin|
+  BK_LED_BLU_Pin, GPIO_PIN_RESET);
+  /*##-1- FatFS: Link the SD disk I/O driver ##########*/
+  if(retSD == 0){
+	/* success: set the orange LED on */
+	HAL_GPIO_WritePin(GPIOD, BK_LED_ORG_Pin, GPIO_PIN_SET);
+    /*##-2- Register the file system object to the FatFs module ###*/
+	if(f_mount(&SDFatFs, (TCHAR const*)SD_Path, 0) != FR_OK){
+	  /* FatFs Initialization Error : set the red LED on */
+	  HAL_GPIO_WritePin(GPIOD, BK_LED_RED_Pin, GPIO_PIN_SET);
+	  while(1);
+	} else {
+	  /*##-3- Create a FAT file system (format) on the logical drive#*/
+	  /* WARNING: Formatting the uSD card will delete all content on the device */
+	  if(f_mkfs((TCHAR const*)SD_Path, 0, 0) != FR_OK){
+		/* FatFs Format Error : set the red LED on */
+		HAL_GPIO_WritePin(GPIOD, BK_LED_RED_Pin, GPIO_PIN_SET);
+		while(1);
+	  } else {
+		/*##-4- Create & Open a new text file object with write access#*/
+		if(f_open(&MyFile, "bad.bk", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK){
+		  /* 'bad.bk' file Open for write Error : set the red LED on */
+		  HAL_GPIO_WritePin(GPIOD, BK_LED_RED_Pin, GPIO_PIN_SET);
+		  while(1);
+		} else {
+		  /*##-5- Write data to the text file ####################*/
+		  res = f_write(&MyFile, wtext, sizeof(wtext), (void *)&byteswritten);
+		  if((byteswritten == 0) || (res != FR_OK)){
+		    /* 'bad.bk' file Write or EOF Error : set the red LED on */
+			HAL_GPIO_WritePin(GPIOD, BK_LED_RED_Pin, GPIO_PIN_SET);
+		    while(1);
+		  } else {
+		    HAL_GPIO_WritePin(GPIOD, BK_LED_BLU_Pin, GPIO_PIN_SET);
+			/*##-8- Read data from the text file #########*/
+			res = f_read(&MyFile, rtext, sizeof(wtext), &bytesread);
+			if((strcmp(rtext,wtext)!=0)|| (res != FR_OK)){
+			  /* 'bad.bk' file Read or EOF Error : set the red LED on */
+			  HAL_GPIO_WritePin(GPIOD, BK_LED_RED_Pin, GPIO_PIN_SET);
+			  while(1);
+			} else {
+			  /* Successful read : set the green LED On */
+			  HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin, GPIO_PIN_SET);
+		      /*##-9- Close the open text file ################*/
+			  f_close(&MyFile);
+			}
+		  }
+		}
+	  }
+	}
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -217,7 +281,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BK_LED_BLU_Pin */
+  /*Configure /*##-0- Turn all LEDs off(red, green, orange and blue) */
+HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin|BK_LED_ORG_Pin|BK_LED_RED_Pin|
+BK_LED_BLU_Pin, GPIO_PIN_RESET);GPIO pin : BK_LED_BLU_Pin */
   GPIO_InitStruct.Pin = BK_LED_BLU_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
