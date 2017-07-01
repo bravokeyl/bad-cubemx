@@ -63,7 +63,7 @@ FATFS SDFatFs; /* File system object for SD card logical drive */
 FIL MyFile;
 uint8_t pithre = 0;
 /* File object */
-const char wtext[] = "Hola Pithre!";
+const char wtext[] = "Hola Double Pithre\0";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,7 +121,7 @@ int main(void)
 		 HAL_Delay(3000);
 	  };
 	} else {
-		res = f_open(&MyFile, "hola.log", FA_CREATE_ALWAYS | FA_WRITE);
+		res = f_open(&MyFile, "hola.bk", FA_CREATE_ALWAYS | FA_WRITE);
 		if( res != FR_OK){
 		  /* 'bad.bk' file Open for write Error : set the red LED on */
 		  while(1){
@@ -138,6 +138,7 @@ int main(void)
 		    };
 		  } else {
 			pithre = 1;
+			HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin, GPIO_PIN_SET);
 			f_close(&MyFile);
 		  }
 		}
