@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * @file   fatfs.h
+  * @brief  Header for fatfs applications
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -45,41 +45,33 @@
   *
   ******************************************************************************
   */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __fatfs_H
+#define __fatfs_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+#include "ff.h"
+#include "ff_gen_drv.h"
+#include "sd_diskio.h" /* defines SD_Driver as external */
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
+extern uint8_t retSD; /* Return value for SD */
+extern char SD_Path[4]; /* SD logical drive path */
 
-#define BK_LED_GRN_Pin GPIO_PIN_12
-#define BK_LED_GRN_GPIO_Port GPIOD
-#define BK_LED_ORG_Pin GPIO_PIN_13
-#define BK_LED_ORG_GPIO_Port GPIOD
-#define BK_LED_RED_Pin GPIO_PIN_14
-#define BK_LED_RED_GPIO_Port GPIOD
-#define BK_LED_BLU_Pin GPIO_PIN_15
-#define BK_LED_BLU_GPIO_Port GPIOD
+void MX_FATFS_Init(void);
 
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN Prototypes */
 
-/* USER CODE END Private defines */
+/* USER CODE END Prototypes */
+#ifdef __cplusplus
+}
+#endif
+#endif /*__fatfs_H */
 
-void _Error_Handler(char *, int);
-
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-*/ 
-
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

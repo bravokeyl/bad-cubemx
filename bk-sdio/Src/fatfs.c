@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * @file   fatfs.c
+  * @brief  Code for fatfs applications
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -45,41 +45,40 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
 
-/* USER CODE BEGIN Includes */
+#include "fatfs.h"
 
-/* USER CODE END Includes */
+uint8_t retSD;    /* Return value for SD */
+char SD_Path[4];  /* SD logical drive path */
 
-/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN Variables */
 
-#define BK_LED_GRN_Pin GPIO_PIN_12
-#define BK_LED_GRN_GPIO_Port GPIOD
-#define BK_LED_ORG_Pin GPIO_PIN_13
-#define BK_LED_ORG_GPIO_Port GPIOD
-#define BK_LED_RED_Pin GPIO_PIN_14
-#define BK_LED_RED_GPIO_Port GPIOD
-#define BK_LED_BLU_Pin GPIO_PIN_15
-#define BK_LED_BLU_GPIO_Port GPIOD
+/* USER CODE END Variables */    
 
-/* USER CODE BEGIN Private defines */
+void MX_FATFS_Init(void) 
+{
+  /*## FatFS: Link the SD driver ###########################*/
+  retSD = FATFS_LinkDriver(&SD_Driver, SD_Path);
 
-/* USER CODE END Private defines */
-
-void _Error_Handler(char *, int);
-
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+  /* USER CODE BEGIN Init */
+  /* additional user code for init */     
+  /* USER CODE END Init */
+}
 
 /**
-  * @}
-  */ 
+  * @brief  Gets Time from RTC 
+  * @param  None
+  * @retval Time in DWORD
+  */
+DWORD get_fattime(void)
+{
+  /* USER CODE BEGIN get_fattime */
+  return 0;
+  /* USER CODE END get_fattime */  
+}
 
-/**
-  * @}
-*/ 
+/* USER CODE BEGIN Application */
+     
+/* USER CODE END Application */
 
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
