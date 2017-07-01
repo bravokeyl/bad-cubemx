@@ -46,6 +46,15 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define BK_LED_GRN_Pin GPIO_PIN_12
+#define BK_LED_GRN_GPIO_Port GPIOD
+#define BK_LED_ORG_Pin GPIO_PIN_13
+#define BK_LED_ORG_GPIO_Port GPIOD
+#define BK_LED_RED_Pin GPIO_PIN_14
+#define BK_LED_RED_GPIO_Port GPIOD
+#define BK_LED_BLU_Pin GPIO_PIN_15
+#define BK_LED_BLU_GPIO_Port GPIOD
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
