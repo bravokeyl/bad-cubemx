@@ -63,7 +63,7 @@ FATFS SDFatFs; /* File system object for SD card logical drive */
 FIL MyFile;
 uint8_t pithre = 0;
 /* File object */
-const char wtext[] = "Hola Double Pithre\0";
+const char wtext[] = "Hola Double Pithre";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,20 +121,36 @@ int main(void)
 		 HAL_Delay(3000);
 	  };
 	} else {
-		res = f_open(&MyFile, "hola.bk", FA_CREATE_ALWAYS | FA_WRITE);
+		res = f_open(&MyFile, "hola.log", FA_CREATE_ALWAYS | FA_WRITE);
 		if( res != FR_OK){
 		  /* 'bad.bk' file Open for write Error : set the red LED on */
 		  while(1){
-			 HAL_GPIO_TogglePin(GPIOD, BK_LED_BLU_Pin );
+			 HAL_GPIO_TogglePin(GPIOD, BK_LED_RED_Pin );
 			 HAL_Delay(1000);
 		  };
 		} else {
 		  res = f_write(&MyFile, wtext, sizeof(wtext), (void *)&byteswritten);
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
+		  f_printf(&MyFile, "%s", "\nf_print should be working you know.");
 		  if((byteswritten == 0) || (res != FR_OK)){
 		    /* 'bad.bk' file Write or EOF Error : set the red LED on */
 		    while(1){
 		    	HAL_GPIO_TogglePin(GPIOD, BK_LED_RED_Pin );
-		    	HAL_Delay(1000);
+		    	HAL_Delay(2000);
 		    };
 		  } else {
 			pithre = 1;
@@ -142,7 +158,6 @@ int main(void)
 			f_close(&MyFile);
 		  }
 		}
-//	  }//mkfs
 	}
   }
   /* USER CODE END 2 */
