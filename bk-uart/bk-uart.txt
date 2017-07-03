@@ -1,0 +1,45 @@
+Configuration	bk-uart
+STM32CubeMX 	4.21.0
+Date	07/03/2017
+MCU	STM32F407VGTx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+25	PA2	USART2_TX	
+26	PA3	USART2_RX	
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : bk-uart
+Project Folder : /home/xenial/Desktop/STM32F4Discovery/bad-cubemx/bk-uart
+Toolchain / IDE : TrueSTUDIO
+Firmware Package Name and Version : STM32Cube FW_F4 V1.16.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : Balanced Size/Speed
+
+
+
+
+
+
