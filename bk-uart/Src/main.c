@@ -48,7 +48,6 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t buffer[10] = {0,1,2,3,4,5,6,7,8,9};
 uint8_t r[10];
 HAL_StatusTypeDef tr;
 HAL_StatusTypeDef rt;
@@ -72,7 +71,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  char bkData[19] = "Hola Double Pithre!";
+  char bkR[10];
+  uint8_t ec = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -96,7 +97,7 @@ int main(void)
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Transmit(&huart2,(uint8_t *)bkData,19,50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,10 +107,13 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	 tr = HAL_UART_Transmit(&huart2,buffer,10,100);
-	 rt=HAL_UART_Receive(&huart2,r,10,10000);
-	 HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-	 HAL_Delay(2000);
+	  HAL_UART_Receive(&huart2,(uint8_t *)bkR,10,1000);
+	  if(bkR[0] == '*'){
+		  HAL_UART_Transmit(&huart2,(uint8_t *)bkR,5,50);
+		  bkR[sizeof(bkR)] = '\0';
+	  }else {
+		  HAL_UART_Transmit(&huart2,(uint8_t *)ec,1,50);
+	  }
   }
   /* USER CODE END 3 */
 
@@ -171,7 +175,7 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -185,31 +189,13 @@ static void MX_USART2_UART_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
-        * Output
-        * EVENT_OUT
-        * EXTI
+/** Pinout Configuration
 */
 static void MX_GPIO_Init(void)
 {
 
-  GPIO_InitTypeDef GPIO_InitStruct;
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PD12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 }
 
