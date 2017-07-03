@@ -70,7 +70,7 @@ const char wtext[] = "Hola Double Pithre";
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SDIO_SD_Init(void);
-
+void BK_SD_WRITE_DATA(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
@@ -113,7 +113,7 @@ int main(void)
   HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin|BK_LED_ORG_Pin|BK_LED_RED_Pin|
   BK_LED_BLU_Pin, GPIO_PIN_RESET);
   if(retSD == 0){
-	HAL_GPIO_WritePin(GPIOD, BK_LED_ORG_Pin, GPIO_PIN_SET);
+
 	res = f_mount(&SDFatFs, (TCHAR const*)SD_Path, 0);
 	if( res != FR_OK){
 	  while(1){
@@ -124,6 +124,12 @@ int main(void)
 		res = f_open(&MyFile, "hola.log", FA_CREATE_ALWAYS | FA_WRITE);
 		if( res != FR_OK){
 		  /* 'bad.bk' file Open for write Error : set the red LED on */
+		  if( res == FR_NO_FILESYSTEM ){
+			  HAL_GPIO_WritePin(GPIOD, BK_LED_GRN_Pin, GPIO_PIN_SET );
+			  if(f_mkfs((TCHAR const*)SD_Path, 0, 0) != FR_OK){
+				  HAL_GPIO_WritePin(GPIOD, BK_LED_ORG_Pin, GPIO_PIN_SET);
+			  }
+		  }
 		  while(1){
 			 HAL_GPIO_TogglePin(GPIOD, BK_LED_RED_Pin );
 			 HAL_Delay(1000);
@@ -280,7 +286,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void BK_SD_WRITE_DATA(void) {
 
+}
 /* USER CODE END 4 */
 
 /**
